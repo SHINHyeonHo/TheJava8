@@ -1,5 +1,7 @@
 package me.hh.java8to11;
 
+import java.util.function.*;
+
 public class Foo {
     public static void main(String[] args) {
 
@@ -48,15 +50,60 @@ public class Foo {
 //        RunSomething runSomething = (number) -> number + 10;
 
 //        int baseNumber = 10; // 함수의 밖에 선언한 변수
-        // pure 한 함수라고 볼 수 없다 / 상태 값을 가지고 있다/ 상태값을 의존한다.
-        RunSomething runSomething = new RunSomething() {
-            int baseNumber = 10; // 함수의 밖
-            @Override
-            public int doIt(int number) {
-//                baseNumber++; // 익명 내부 클래스에서는 이루어질 수 없는 형태이다.
-                return number + baseNumber;
-            }
-        };
+//        // pure 한 함수라고 볼 수 없다 / 상태 값을 가지고 있다/ 상태값을 의존한다.
+//        RunSomething runSomething = new RunSomething() {
+//            int baseNumber = 10; // 함수의 밖
+//            @Override
+//            public int doIt(int number) {
+////                baseNumber++; // 익명 내부 클래스에서는 이루어질 수 없는 형태이다.
+//                return number + baseNumber;
+//            }
+//        };
+
+//        // 클래스를 이용하여 구현
+//        Plus10 plus10 = new Plus10();
+//        System.out.println(plus10.apply(1));
+
+        // 클래스 없이 구현 (Lambda Expressions 사용)
+        // # Function<T, R>
+        // apply : 리턴
+        // andThen : 조합할 때 사용
+        // compose : 조합할 때 사용
+        // static <T> Function<T, T> identity() : flxjs
+        Function<Integer, Integer> plus10 = (i) -> i + 10;
+//        System.out.println(plus10.apply(1)); // 11
+
+        Function<Integer, Integer> multiply2 = (i) -> i * 2;
+//        System.out.println(multiply2.apply(1)); // 2
+
+        // 고차함수. 계산한 값을 compose 안의 메소드로 한 번 더. 잇는 역할.
+        Function<Integer, Integer> multiply2AndPlus10 = plus10.compose(multiply2);
+//        System.out.println(multiply2AndPlus10.apply(2));
+
+        // andThen 안에 값을 계산하고 앞에 것을.
+//        System.out.println(plus10.andThen(multiply2).apply(2));
+
+        // # BiFunction <T, U, R>
+
+        // # Consumer <T>
+        Consumer<Integer> printT = (i) -> System.out.println(i);
+//        printT.accept(10);
+
+        // # Supplier <T>
+        Supplier<Integer> get10 = () -> 10;
+        System.out.println(get10.get());
+
+        // # Predicate<T>
+        Predicate<String> startsWithHH = (s) -> s.startsWith("HH");
+        Predicate<Integer> isEven = (i) -> i%2 == 0;
+//        startsWithHH.negate();
+//        startsWithHH.and();
+
+        // # UnaryOperator <T> : 입력값과 리턴값이 같은 경우 Function 대신 사용할 수 있음
+        UnaryOperator<Integer> Plus20 = (i) -> i + 20;
+
+        // # BinaryOperator <T> : 입력값 3가지가 같은 경우 BiFunction 대신 사용
+
     }
 
 }
